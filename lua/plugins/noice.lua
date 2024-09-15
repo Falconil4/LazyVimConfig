@@ -9,6 +9,13 @@ return {
         },
         opts = { skip = true },
       },
+      {
+        filter = {
+          event = "msg_show",
+          find = "%d+B$",
+        },
+        opts = { skip = true },
+      },
     },
   },
 }
