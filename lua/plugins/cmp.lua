@@ -1,6 +1,5 @@
 return {
   "hrsh7th/nvim-cmp",
-  ---@param opts cmp.ConfigSchema
   opts = function(_, opts)
     local has_words_before = function()
       unpack = unpack or table.unpack
@@ -40,5 +39,14 @@ return {
       end, { "i", "c" }),
       ["<C-i>"] = cmp.mapping.complete(),
     })
+
+    cmp.event:on("confirm_done", function()
+      vim.lsp.buf.code_action({
+        filter = function(action)
+          return string.find(action.title, "^using") ~= nil
+        end,
+        apply = true,
+      })
+    end)
   end,
 }
