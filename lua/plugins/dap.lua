@@ -1,7 +1,20 @@
 return {
   "mfussenegger/nvim-dap",
-  opts = function(_, opts)
+  opts = function()
     local dap = require("dap")
+
+    dap.listeners.before["event_terminated"]["test"] = function()
+      vim.cmd("Trouble diagnostics toggle")
+      vim.cmd("NvimTreeClose")
+
+      vim.defer_fn(function()
+        vim.cmd("Trouble diagnostics toggle")
+
+        vim.defer_fn(function()
+          vim.cmd("NvimTreeOpen")
+        end, 200)
+      end, 200)
+    end
 
     dap.adapters.coreclr = {
       type = "executable",
@@ -23,7 +36,13 @@ return {
         type = "coreclr",
         name = "Attach",
         request = "attach",
-        processId = require("dap.utils").pick_process,
+        processId = function()
+          return require("dap.utils").pick_process({
+            filter = function(proc)
+              return string.find(proc.name, vim.fn.getcwd():match("([^\\]+)$")) ~= nil
+            end,
+          })
+        end,
       },
     }
   end,
