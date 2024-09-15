@@ -31,6 +31,11 @@ return {
           os.execute("dotnet build")
           return vim.fn.input("Path to dll", vim.fn.getcwd() .. "/bin/Debug/", "file")
         end,
+        env = "ASPNETCORE_ENVIRONMENT=Development",
+        args = {
+          "/p:EnvironmentName=Development",
+          "--environment=Development",
+        },
       },
       {
         type = "coreclr",
