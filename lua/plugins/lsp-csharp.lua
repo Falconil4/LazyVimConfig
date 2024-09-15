@@ -5,7 +5,11 @@ return {
       omnisharp = {
         cmd = { "omnisharp" },
         root_dir = function(fname)
-          return require("lspconfig.util").root_pattern("*.sln")(fname)
+          local solution = require("lspconfig.util").root_pattern("*.sln")(fname)
+          if solution ~= nil then
+            return solution
+          end
+          return require("lspconfig.util").root_pattern("*.csproj")(fname)
         end,
         settings = {
           FormattingOptions = {
